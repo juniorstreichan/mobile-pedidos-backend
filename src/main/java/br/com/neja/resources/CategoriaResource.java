@@ -1,26 +1,26 @@
 package br.com.neja.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.neja.domain.Categoria;
+import br.com.neja.services.CategoriaService;
 
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource {
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Categoria> listar() {
-		List<Categoria> listRet= new ArrayList<>(); 
-		listRet.add(new Categoria(1,"cat-top"));
-		listRet.add( new Categoria(2,"desi"));
-		listRet.add( new Categoria(3,"nejar"));
+	
+	@Autowired
+	private CategoriaService service;
+	
+	@RequestMapping(value="/{id}",method=RequestMethod.GET)
+	public ResponseEntity<?> find(@PathVariable  Integer id) {
 		
-		return listRet;
+		return ResponseEntity.ok().body( service.buscar(id));
 		
 	}
 }
