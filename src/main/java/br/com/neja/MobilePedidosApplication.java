@@ -1,6 +1,8 @@
 package br.com.neja;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,20 @@ import br.com.neja.domain.Cidade;
 import br.com.neja.domain.Cliente;
 import br.com.neja.domain.Endereco;
 import br.com.neja.domain.Estado;
+import br.com.neja.domain.Pagamento;
+import br.com.neja.domain.PagamentoComBoleto;
+import br.com.neja.domain.PagamentoComCartao;
+import br.com.neja.domain.Pedido;
 import br.com.neja.domain.Produto;
+import br.com.neja.domain.enums.EstadoPagamento;
 import br.com.neja.domain.enums.TipoCliente;
 import br.com.neja.repositories.CategoriaRepository;
 import br.com.neja.repositories.CidadeRepository;
 import br.com.neja.repositories.ClienteRepository;
 import br.com.neja.repositories.EnderecoRepository;
 import br.com.neja.repositories.EstadoRepository;
+import br.com.neja.repositories.PagamentoRepository;
+import br.com.neja.repositories.PedidoRepository;
 import br.com.neja.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -33,15 +42,21 @@ public class MobilePedidosApplication implements CommandLineRunner {
 
 	@Autowired
 	private EstadoRepository estRepo;
-	
+
 	@Autowired
 	private EnderecoRepository endRepo;
-	
+
 	@Autowired
 	private ClienteRepository cliRepo;
-	
+
 	@Autowired
 	private CidadeRepository cidRepo;
+	
+	@Autowired
+	private PagamentoRepository pagRepo;
+	
+	@Autowired
+	private PedidoRepository pedRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MobilePedidosApplication.class, args);
@@ -96,8 +111,28 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		cl2.getTelefones().addAll(Arrays.asList("9 45789963", "9 21547898"));
 		Endereco e2 = new Endereco(null, "bem ali", "555", "B", cd2, "vila maria", "78076888", cl2);
 		cl1.getEnderecos().addAll(Arrays.asList(e2));
+
+		cliRepo.saveAll(Arrays.asList(cl2, cl1));
+		endRepo.saveAll(Arrays.asList(e1, e2));
+
+		// PEDIDO E PAGAMENTO
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+		Pedido pd1 = new Pedido(null, LocalDateTime.parse("30/09/2017 10:32", formatter), cl1, e1);
+		Pedido pd2 = new Pedido(null, LocalDateTime.parse("10/10/2017 19:35", formatter), cl2, e1);
 		
-		cliRepo.saveAll(Arrays.asList(cl2,cl1));
-		endRepo.saveAll(Arrays.asList(e1,e2));
+
+		Pagamento pg1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, pd1, 6);
+		pd1.setPagamento(pg1);
+
+		Pagamento pg2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, pd2,
+				LocalDateTime.parse("20/10/2017 00:00", formatter), null);
+		pd2.setPagamento(pg2);
+		
+		cl1.getPedidos().addAll(Arrays.asList(pd1));
+		cl2.getPedidos().addAll(Arrays.asList(pd2));
+		
+		pedRepo.saveAll(Arrays.asList(pd1,pd2));
+		pagRepo.saveAll(Arrays.asList(pg1,pg2));
+		
 	}
 }
