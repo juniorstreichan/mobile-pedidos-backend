@@ -15,6 +15,7 @@ import br.com.neja.domain.Cidade;
 import br.com.neja.domain.Cliente;
 import br.com.neja.domain.Endereco;
 import br.com.neja.domain.Estado;
+import br.com.neja.domain.ItemPedido;
 import br.com.neja.domain.Pagamento;
 import br.com.neja.domain.PagamentoComBoleto;
 import br.com.neja.domain.PagamentoComCartao;
@@ -27,6 +28,7 @@ import br.com.neja.repositories.CidadeRepository;
 import br.com.neja.repositories.ClienteRepository;
 import br.com.neja.repositories.EnderecoRepository;
 import br.com.neja.repositories.EstadoRepository;
+import br.com.neja.repositories.ItemPedidoRepository;
 import br.com.neja.repositories.PagamentoRepository;
 import br.com.neja.repositories.PedidoRepository;
 import br.com.neja.repositories.ProdutoRepository;
@@ -51,12 +53,15 @@ public class MobilePedidosApplication implements CommandLineRunner {
 
 	@Autowired
 	private CidadeRepository cidRepo;
-	
+
 	@Autowired
 	private PagamentoRepository pagRepo;
-	
+
 	@Autowired
 	private PedidoRepository pedRepo;
+	
+	@Autowired
+	private ItemPedidoRepository itemRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MobilePedidosApplication.class, args);
@@ -119,7 +124,6 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		Pedido pd1 = new Pedido(null, LocalDateTime.parse("30/09/2017 10:32", formatter), cl1, e1);
 		Pedido pd2 = new Pedido(null, LocalDateTime.parse("10/10/2017 19:35", formatter), cl2, e1);
-		
 
 		Pagamento pg1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, pd1, 6);
 		pd1.setPagamento(pg1);
@@ -127,12 +131,23 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		Pagamento pg2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, pd2,
 				LocalDateTime.parse("20/10/2017 00:00", formatter), null);
 		pd2.setPagamento(pg2);
-		
+
 		cl1.getPedidos().addAll(Arrays.asList(pd1));
 		cl2.getPedidos().addAll(Arrays.asList(pd2));
+
+		pedRepo.saveAll(Arrays.asList(pd1, pd2));
+		pagRepo.saveAll(Arrays.asList(pg1, pg2));
+
+		// ITENS DE PEDIDO
 		
-		pedRepo.saveAll(Arrays.asList(pd1,pd2));
-		pagRepo.saveAll(Arrays.asList(pg1,pg2));
+		ItemPedido ip1 = new ItemPedido(pd1, p1, new BigDecimal("10"), 2, p1.getPreco().multiply(BigDecimal.valueOf(2)));
+		ItemPedido ip2 = new ItemPedido(pd2, p2, new BigDecimal("10"), 2, p2.getPreco().multiply(BigDecimal.valueOf(2)));
 		
+		pd1.getItens().addAll(Arrays.asList(ip1));
+		pd2.getItens().addAll(Arrays.asList(ip2));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip2));
+		itemRepo.saveAll(Arrays.asList(ip1, ip2));
 	}
 }
