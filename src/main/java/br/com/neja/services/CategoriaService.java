@@ -5,10 +5,12 @@ package br.com.neja.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.neja.domain.Categoria;
 import br.com.neja.repositories.CategoriaRepository;
+import br.com.neja.services.exception.DataIntegrirtyException;
 import br.com.neja.services.exception.ObjectNotFoundException;
 
 @Service
@@ -34,4 +36,33 @@ public class CategoriaService {
 		find(obj.getId());
 		return repo.save(obj);
 	}
+
+
+	public void delete(Integer id) {
+		Categoria c = find(id);
+		try {
+			repo.deleteById(c.getId());
+		} catch (DataIntegrityViolationException ex) {
+			throw new DataIntegrirtyException("Não é possível excluir a categoria"+c.getNome()+" pois ela possui produtos");
+		}
+		
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
