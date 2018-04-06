@@ -6,21 +6,23 @@ import java.math.BigDecimal;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class ItemPedido implements Serializable {
 
- 
 	private static final long serialVersionUID = 1L;
 
-	
+	@JsonIgnore
+	@JsonIdentityReference
 	@EmbeddedId
 	private ItemPedidoPK id = new ItemPedidoPK();
 	private BigDecimal desconto;
 	private Integer quantidade;
 	private BigDecimal preco;
-	
-	public ItemPedido(Pedido pedido,Produto produto, BigDecimal desconto, Integer quantidade, BigDecimal preco) {
+
+	public ItemPedido(Pedido pedido, Produto produto, BigDecimal desconto, Integer quantidade, BigDecimal preco) {
 		super();
 		this.id.setPedido(pedido);
 		this.id.setProduto(produto);
@@ -28,19 +30,20 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
-	
+
 	public ItemPedido() {
-		
 	}
 
-	public Pedido getPedido(){
+	@JsonIgnore
+	public Pedido getPedido() {
 		return id.getPedido();
 	}
+
 
 	public Produto getProduto() {
 		return id.getProduto();
 	}
-	
+
 	public ItemPedidoPK getId() {
 		return id;
 	}
@@ -82,7 +85,4 @@ public class ItemPedido implements Serializable {
 		return true;
 	}
 
-
-	
-	
 }
