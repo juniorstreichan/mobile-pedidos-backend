@@ -32,7 +32,7 @@ public class Pedido implements Serializable {
 	private LocalDateTime instante;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
-	@JsonManagedReference
+	
 	private Pagamento pagamento;
 
 	@ManyToOne
@@ -41,7 +41,7 @@ public class Pedido implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "ID_CLIENTE")
-	@JsonManagedReference
+	
 	private Cliente cliente;
 
 	@OneToMany(mappedBy="id.pedido")

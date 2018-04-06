@@ -19,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -42,7 +41,7 @@ public class Produto implements Serializable{
 	private BigDecimal preco;
 	
     
-    @JsonBackReference
+    @JsonIgnore
 	@ManyToMany
 	@JoinTable(
 			name="ITEM_CATEGORIA",
