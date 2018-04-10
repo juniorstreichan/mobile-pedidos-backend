@@ -75,6 +75,11 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		Categoria c1 = new Categoria("informatica");
 		Categoria c2 = new Categoria("robotica");
 		Categoria c3 = new Categoria("limpeza");
+		Categoria c4 = new Categoria("açougue");
+		Categoria c5 = new Categoria("pratos");
+		Categoria c6 = new Categoria("verduras");
+		Categoria c7 = new Categoria("esportes");
+		Categoria c8 = new Categoria("pizza");
 
 		Produto p1 = new Produto(null, "pcgamer", new BigDecimal("1200"));
 		Produto p2 = new Produto(null, "impressora", new BigDecimal("800"));
@@ -88,7 +93,7 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		p2.getCategorias().addAll(Arrays.asList(c2, c1));
 		p3.getCategorias().addAll(Arrays.asList(c3));
 
-		catRepo.saveAll(Arrays.asList(c1, c2, c3));
+		catRepo.saveAll(Arrays.asList(c1, c2, c3,c4,c5,c6,c7,c8));
 		prodRepo.saveAll(Arrays.asList(p1, p2, p3));
 
 		// ESTADO E CIDADE

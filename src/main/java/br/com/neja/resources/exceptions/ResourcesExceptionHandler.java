@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.neja.services.exception.DataIntegrirtyException;
+import br.com.neja.services.exception.DataIntegrityException;
 import br.com.neja.services.exception.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -24,8 +24,8 @@ public class ResourcesExceptionHandler {
 	}
 	
 	
-	@ExceptionHandler(DataIntegrirtyException.class)
-	public ResponseEntity<StandardError> DataIntegrity(DataIntegrirtyException ex, HttpServletRequest req) {
+	@ExceptionHandler(DataIntegrityException.class)
+	public ResponseEntity<StandardError> DataIntegrity(DataIntegrityException ex, HttpServletRequest req) {
 
 		StandardError erro = new StandardError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(),
 				System.currentTimeMillis());
