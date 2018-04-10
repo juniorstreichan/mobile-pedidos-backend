@@ -101,8 +101,8 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		Estado mt = new Estado(111, "Mato grosso", "MT");
 		Estado sp = new Estado(222, "Sao Paulo", "SP");
 
-		Cidade cd1 = new Cidade(255, "Cuiaba", mt);
-		Cidade cd2 = new Cidade(245, "Sorocaba", sp);
+		Cidade cd1 = new Cidade(null,255, "Cuiaba", mt);
+		Cidade cd2 = new Cidade(null,245, "Sorocaba", sp);
 
 		mt.getCidades().addAll(Arrays.asList(cd1));
 		sp.getCidades().addAll(Arrays.asList(cd2));

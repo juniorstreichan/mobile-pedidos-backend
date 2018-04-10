@@ -9,10 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.neja.domain.Cidade;
 import br.com.neja.domain.Cliente;
+import br.com.neja.domain.Endereco;
+import br.com.neja.domain.enums.TipoCliente;
 import br.com.neja.dto.ClienteDTO;
+import br.com.neja.dto.ClienteNewDTO;
 import br.com.neja.repositories.ClienteRepository;
+import br.com.neja.repositories.EnderecoRepository;
 import br.com.neja.services.exception.DataIntegrityException;
 import br.com.neja.services.exception.ObjectNotFoundException;
 
@@ -20,6 +26,9 @@ import br.com.neja.services.exception.ObjectNotFoundException;
 public class ClienteService {
 	@Autowired
 	private ClienteRepository repo;
+	
+	@Autowired
+	private EnderecoRepository endRepo;
 
 	public Cliente find(Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
@@ -31,9 +40,12 @@ public class ClienteService {
 		return repo.findAll();
 	}
 
+	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		return repo.save(obj);
+		repo.save(obj);
+		endRepo.saveAll(obj.getEnderecos());
+		return obj;
 	}
 
 	public Cliente update(Cliente obj) {
@@ -54,7 +66,10 @@ public class ClienteService {
 
 	public Page<Cliente> findPage(
 			// parametros
-			Integer page, Integer linesPerPage, String orderBy, String direction
+			Integer page,
+			Integer linesPerPage,
+			String orderBy,
+			String direction
 	// fim parametros
 	) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
@@ -64,6 +79,14 @@ public class ClienteService {
 
 	public Cliente fromDTO(ClienteDTO objDTO) {
 		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null);
+	}
+	
+	public Cliente fromDTO(ClienteNewDTO objDTO) {
+		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.toEnum(objDTO.getTipo()));
+		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(), new Cidade(objDTO.getCidade(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().addAll(objDTO.getTelefones());
+		return cli;
 	}
 
 	private void updateData(Cliente newObj, Cliente obj) {

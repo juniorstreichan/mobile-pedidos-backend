@@ -36,8 +36,16 @@ public class Cidade implements Serializable {
 
 	}
 
-	public Cidade(Integer codIBGE, String nome, Estado estado) {
+	public Cidade(Integer id, String nome, Estado estado) {
 		super();
+		this.id = id;
+		this.nome = nome;
+		this.estado = estado;
+	}
+	
+	public Cidade(Integer id,Integer codIBGE, String nome, Estado estado) {
+		super();
+		this.id = id;
 		this.codIBGE = codIBGE;
 		this.nome = nome;
 		this.estado = estado;
