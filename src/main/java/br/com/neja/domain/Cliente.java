@@ -25,6 +25,8 @@ public class Cliente {
 	@Column(name = "ID_CLIENTE")
 	private Integer id;
 	private String nome;
+	
+	@Column(unique=true,name="EMAIL_CLIENTE")
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
@@ -34,7 +36,7 @@ public class Cliente {
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	@ElementCollection
-	@CollectionTable(name="TELEFONE")
+	@CollectionTable(name="TELEFONE_CLIENTE")
 	private Set<String> telefones= new HashSet<>();
 	
 	@OneToMany(mappedBy="cliente")
