@@ -4,12 +4,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import br.com.neja.services.validation.ClienteInsert;
+
+
+@ClienteInsert
 public class ClienteNewDTO implements Serializable {
 	
  
 	private static final long serialVersionUID = 1L;
+	private static final int MIN_NOME = 5;
+	private static final int MAX_NOME = 120;
 	
+	
+	
+	@NotEmpty(message="Nome:Preenchimento Obrigatório!")
+	@Length(max=MAX_NOME ,min=MIN_NOME,message="Nome:Tamanho entre "+MIN_NOME+" e "+MAX_NOME+" caracteres!")
 	private String nome;
+	
+	@NotEmpty(message="Email:Preenchimento Obrigatório!")
+	@Email(message="Email Inválido!")
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
@@ -19,8 +37,10 @@ public class ClienteNewDTO implements Serializable {
 	private String complemento;
 	private Integer cidade;
 	private String bairro;
+	@NotEmpty(message="CEP:Preenchimento Obrigatório!")
 	private String cep;
 	
+	@NotEmpty(message="Telefone:Preenchimento Obrigatório do primeiro número de telefone!")
 	private String telefone1;
 	private String telefone2;
 	private String telefone3;

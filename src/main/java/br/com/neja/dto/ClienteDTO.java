@@ -12,11 +12,15 @@ import br.com.neja.domain.Cliente;
 public class ClienteDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	private static final int MIN_NOME = 5;
+	private static final int MAX_NOME = 120;
+	
+	
+	
 	private Integer id;
 	
 	@NotEmpty(message="Nome:Preenchimento Obrigatório!")
-	@Length(max=120 ,min=5,message="Nome:Tamanho entre 5 e 120 caracteres!")
+	@Length(max=MAX_NOME ,min=MIN_NOME,message="Nome:Tamanho entre "+MIN_NOME+" e "+MAX_NOME+" caracteres!")
 	private String nome;
 	
 	
