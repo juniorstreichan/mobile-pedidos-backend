@@ -84,6 +84,7 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		Produto p1 = new Produto(null, "pcgamer", new BigDecimal("1200"));
 		Produto p2 = new Produto(null, "impressora", new BigDecimal("800"));
 		Produto p3 = new Produto(null, "sabao", new BigDecimal("10"));
+		
 
 		c1.getProdutos().addAll(Arrays.asList(p1, p2));
 		c2.getProdutos().addAll(Arrays.asList(p1, p2));
