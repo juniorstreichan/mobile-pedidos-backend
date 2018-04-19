@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class URL {
 
 	public static List<Integer> decodeIntList(String req){	
-		String letras = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM?@#$%^&*(){}+-/";
+		String letras = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM?@#$%^&*(){}+`'~-/";
 		String numeros = "0123456789"; 
 		List<String> list = new ArrayList<String>();
 		
