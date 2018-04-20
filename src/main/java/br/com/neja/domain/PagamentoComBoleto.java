@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import br.com.neja.domain.enums.EstadoPagamento;
 
 
 @Entity
+@JsonTypeName
 public class PagamentoComBoleto extends Pagamento {
 	
 	private static final long serialVersionUID = 1L;
