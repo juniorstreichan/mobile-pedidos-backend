@@ -72,6 +72,7 @@ public class DBService {
 		Categoria c6 = new Categoria("verduras");
 		Categoria c7 = new Categoria("esportes");
 		Categoria c8 = new Categoria("pizza");
+		
 
 		Produto p1 = new Produto(null, "pcgamer", new BigDecimal("1200"));
 		Produto p2 = new Produto(null, "impressora", new BigDecimal("800"));
