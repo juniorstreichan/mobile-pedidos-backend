@@ -21,6 +21,7 @@ import br.com.neja.domain.PagamentoComCartao;
 import br.com.neja.domain.Pedido;
 import br.com.neja.domain.Produto;
 import br.com.neja.domain.enums.EstadoPagamento;
+import br.com.neja.domain.enums.Perfil;
 import br.com.neja.domain.enums.TipoCliente;
 import br.com.neja.repositories.CategoriaRepository;
 import br.com.neja.repositories.CidadeRepository;
@@ -112,6 +113,7 @@ public class DBService {
 
 		Cliente cl1 = new Cliente(null, "Junior", "junior_strs@hotmail.com", "012345678996", TipoCliente.PESSOA_FISICA,crypt.encode("123"));
 		cl1.getTelefones().addAll(Arrays.asList("9 99896554", "9 65895421"));
+		cl1.addPerfil(Perfil.ADMIN);
 		Endereco e1 = new Endereco(null, "bem ali", "123", "A", cd1, "centro", "78026888", cl1);
 		cl1.getEnderecos().addAll(Arrays.asList(e1));
 
