@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,12 @@ import br.com.neja.services.exception.ObjectNotFoundException;
 public class ClienteService {
 	@Autowired
 	private ClienteRepository repo;
-	
+
 	@Autowired
 	private EnderecoRepository endRepo;
+
+	@Autowired
+	private BCryptPasswordEncoder crypt;
 
 	public Cliente find(Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
@@ -59,17 +63,15 @@ public class ClienteService {
 		try {
 			repo.deleteById(c.getId());
 		} catch (DataIntegrityViolationException ex) {
-			throw new DataIntegrityException("Não é possível fazer a operação DELETE :" + c.getNome()+", existem pedidos relacionados.");
+			throw new DataIntegrityException(
+					"Não é possível fazer a operação DELETE :" + c.getNome() + ", existem pedidos relacionados.");
 		}
 
 	}
 
 	public Page<Cliente> findPage(
 			// parametros
-			Integer page,
-			Integer linesPerPage,
-			String orderBy,
-			String direction
+			Integer page, Integer linesPerPage, String orderBy, String direction
 	// fim parametros
 	) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
@@ -78,12 +80,14 @@ public class ClienteService {
 	}
 
 	public Cliente fromDTO(ClienteDTO objDTO) {
-		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null);
+		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null, null);
 	}
-	
+
 	public Cliente fromDTO(ClienteNewDTO objDTO) {
-		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.toEnum(objDTO.getTipo()));
-		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(), new Cidade(objDTO.getCidade(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
+		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(),
+				TipoCliente.toEnum(objDTO.getTipo()), crypt.encode(objDTO.getSenha()));
+		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
+				new Cidade(objDTO.getCidade(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
 		cli.getEnderecos().add(end);
 		cli.getTelefones().addAll(objDTO.getTelefones());
 		return cli;

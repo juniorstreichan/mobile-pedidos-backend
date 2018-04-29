@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.neja.domain.Categoria;
@@ -61,6 +62,9 @@ public class DBService {
 	@Autowired
 	private ItemPedidoRepository itemRepo;
 
+	@Autowired
+	private BCryptPasswordEncoder crypt;
+	
 	public void initTestDatabase() {
 		// CATEGORIA E PRODUTO
 
@@ -106,12 +110,12 @@ public class DBService {
 
 		// CLIENTE E ENDEREÇO
 
-		Cliente cl1 = new Cliente(null, "Junior", "junior_strs@hotmail.com", "012345678996", TipoCliente.PESSOA_FISICA);
+		Cliente cl1 = new Cliente(null, "Junior", "junior_strs@hotmail.com", "012345678996", TipoCliente.PESSOA_FISICA,crypt.encode("123"));
 		cl1.getTelefones().addAll(Arrays.asList("9 99896554", "9 65895421"));
 		Endereco e1 = new Endereco(null, "bem ali", "123", "A", cd1, "centro", "78026888", cl1);
 		cl1.getEnderecos().addAll(Arrays.asList(e1));
 
-		Cliente cl2 = new Cliente(null, "zé", "zé@zé.com", "888345678996", TipoCliente.PESSOA_FISICA);
+		Cliente cl2 = new Cliente(null, "zé", "zé@zé.com", "888345678996", TipoCliente.PESSOA_FISICA,crypt.encode("123"));
 		cl2.getTelefones().addAll(Arrays.asList("9 45789963", "9 21547898"));
 		Endereco e2 = new Endereco(null, "bem ali", "555", "B", cd2, "vila maria", "78076888", cl2);
 		cl1.getEnderecos().addAll(Arrays.asList(e2));
