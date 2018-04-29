@@ -16,26 +16,27 @@ import br.com.neja.repositories.ItemPedidoRepository;
 import br.com.neja.repositories.PagamentoRepository;
 import br.com.neja.repositories.PedidoRepository;
 import br.com.neja.services.exception.ObjectNotFoundException;
+import br.com.neja.services.mail.EmailService;
 
 @Service
 public class PedidoService {
 	@Autowired
 	private PedidoRepository repo;
-	
+
 	@Autowired
 	private ItemPedidoRepository itemRepo;
-	
+
 	@Autowired
 	private BoletoService boletoService;
-	
+
 	@Autowired
 	private PagamentoRepository pgRepo;
-	
+
 	@Autowired
 	private ProdutoService produtoService;
-	
-	@Autowired
-	private EmailService emailService;
+
+//	@Autowired
+//	private EmailService emailService;
 
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -43,30 +44,30 @@ public class PedidoService {
 				"Objeto não encontrado! Id:" + id + " Tipo: " + Pedido.class.getSimpleName()));
 	}
 
-	
 	@Transactional
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(LocalDateTime.now());
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
-		
+
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
-			PagamentoComBoleto pgto= (PagamentoComBoleto) obj.getPagamento();
-			boletoService.preencherPagamentoBoleto(pgto,obj.getInstante());
+			PagamentoComBoleto pgto = (PagamentoComBoleto) obj.getPagamento();
+			boletoService.preencherPagamentoBoleto(pgto, obj.getInstante());
 		}
-		
+
 		obj = repo.save(obj);
 		pgRepo.save(obj.getPagamento());
-		for (ItemPedido Item: obj.getItens()) {
-			Item.setPedido(obj);
-			Item.setDesconto(BigDecimal.ZERO);
-			Item.setPreco(produtoService.find(Item.getProduto().getId()).getPreco());
-			
+		for (ItemPedido item : obj.getItens()) {
+			item.setPedido(obj);
+			item.setProduto(produtoService.find(item.getProduto().getId()));
+			item.setDesconto(BigDecimal.ZERO);
+			item.setPreco(produtoService.find(item.getProduto().getId()).getPreco());
+
 		}
-		
+
 		itemRepo.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationEmail(obj);
+//		emailService.sendOrderConfirmationHtmlEmail(obj); // ta dando erro
 		return obj;
 	}
 }

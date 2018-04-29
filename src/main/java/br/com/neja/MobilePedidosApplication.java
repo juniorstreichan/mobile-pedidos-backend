@@ -13,7 +13,6 @@ public class MobilePedidosApplication implements CommandLineRunner {
 		SpringApplication.run(MobilePedidosApplication.class, args);
 	}
 
-	// START INICIAL DO BANCO
 	@Override
 	public void run(String... args) throws Exception {
 	}

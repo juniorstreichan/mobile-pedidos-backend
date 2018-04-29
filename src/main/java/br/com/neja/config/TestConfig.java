@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.neja.services.DBService;
-import br.com.neja.services.EmailService;
-import br.com.neja.services.MockMailService;
+import br.com.neja.services.mail.EmailService;
+import br.com.neja.services.mail.MockEmailService;
 
 @Configuration
 @Profile("test")
@@ -17,13 +17,14 @@ public class TestConfig {
 
 	@Bean
 	public boolean initDatabase() {
-		
+
 		dbService.initTestDatabase();
 		return true;
 	}
-	
+
 	@Bean
 	public EmailService emailService() {
-		return new MockMailService();
+		return new MockEmailService();
 	}
+
 }
