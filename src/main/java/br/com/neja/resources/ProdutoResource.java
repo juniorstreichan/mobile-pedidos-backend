@@ -43,4 +43,5 @@ public class ProdutoResource {
 		Page<ProdutoDTO> listDTO = list.map(obj -> new ProdutoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
+
 }

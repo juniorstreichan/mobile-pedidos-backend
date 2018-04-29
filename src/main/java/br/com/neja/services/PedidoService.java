@@ -16,7 +16,6 @@ import br.com.neja.repositories.ItemPedidoRepository;
 import br.com.neja.repositories.PagamentoRepository;
 import br.com.neja.repositories.PedidoRepository;
 import br.com.neja.services.exception.ObjectNotFoundException;
-import br.com.neja.services.mail.EmailService;
 
 @Service
 public class PedidoService {

@@ -2,16 +2,8 @@ package br.com.neja.services.mail;
 
 import java.util.Date;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import br.com.neja.domain.Pedido;
 
@@ -20,38 +12,18 @@ public abstract class AbstractEmailService implements EmailService {
 	@Value("${default.sender}")
 	private String sender;
 
-	@Autowired
-	private TemplateEngine engine;
+	// @Autowired
+	// private TemplateEngine engine;
 
-	@Autowired
-	private JavaMailSender javaMailSender;
+	// @Autowired
+	// private JavaMailSender javaMailSender;
+	//
+
 
 	@Override
 	public void sendOrderConfirmationEmail(Pedido obj) {
 		SimpleMailMessage sm = prepareSimpleMailMessageFromPedido(obj);
 		sendEmail(sm);
-	}
-
-	@Override
-	public void sendOrderConfirmationHtmlEmail(Pedido obj) {
-		try {
-			MimeMessage mm = prepareMimeMessageFromPedido(obj);
-			sendHtmlEmail(mm);
-		} catch (Exception e) {
-			sendOrderConfirmationEmail(obj);
-		}
-	
-	}
-
-	protected MimeMessage prepareMimeMessageFromPedido(Pedido obj) throws MessagingException {
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
-		mmh.setTo(obj.getCliente().getEmail());
-		mmh.setFrom(sender);
-		mmh.setSentDate(new Date(System.currentTimeMillis()));
-		mmh.setSubject("Pedido cadaqstrado com sucesso "+obj.getId());
-		mmh.setText(htmlFromTemplatePedido(obj),true);
-		return mimeMessage;
 	}
 
 	protected SimpleMailMessage prepareSimpleMailMessageFromPedido(Pedido obj) {
@@ -67,11 +39,34 @@ public abstract class AbstractEmailService implements EmailService {
 		return sm;
 	}
 
-	protected String htmlFromTemplatePedido(Pedido obj) {
-		Context context = new Context();
-		context.setVariable("pedido", obj);
-		return engine.process("email/confirmacao-pedido", context);
+	// @Override
+	// public void sendOrderConfirmationHtmlEmail(Pedido obj) {
+	// try {
+	// MimeMessage mm = prepareMimeMessageFromPedido(obj);
+	// sendHtmlEmail(mm);
+	// } catch (Exception e) {
+	// sendOrderConfirmationEmail(obj);
+	// }
+	//
+	// }
 
-	}
+	// protected MimeMessage prepareMimeMessageFromPedido(Pedido obj) throws
+	// MessagingException {
+	// MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+	// MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
+	// mmh.setTo(obj.getCliente().getEmail());
+	// mmh.setFrom(sender);
+	// mmh.setSentDate(new Date(System.currentTimeMillis()));
+	// mmh.setSubject("Pedido cadaqstrado com sucesso "+obj.getId());
+	// mmh.setText(htmlFromTemplatePedido(obj),true);
+	// return mimeMessage;
+	// }
+
+	// protected String htmlFromTemplatePedido(Pedido obj) {
+	// Context context = new Context();
+	// context.setVariable("pedido", obj);
+	// return engine.process("email/confirmacao-pedido", context);
+	//
+	// }
 
 }
