@@ -96,6 +96,13 @@ public class ClienteService {
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
-
 	}
+
+	public Cliente findByEmail(String email) {
+		if (email == null)
+			return null;
+
+		return repo.findByEmail(email);
+	}
+
 }
