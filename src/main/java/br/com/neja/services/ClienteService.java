@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.neja.domain.Cidade;
 import br.com.neja.domain.Cliente;
 import br.com.neja.domain.Endereco;
+import br.com.neja.domain.enums.Perfil;
 import br.com.neja.domain.enums.TipoCliente;
 import br.com.neja.dto.ClienteDTO;
 import br.com.neja.dto.ClienteNewDTO;
 import br.com.neja.repositories.ClienteRepository;
 import br.com.neja.repositories.EnderecoRepository;
+import br.com.neja.security.UserSS;
+import br.com.neja.services.exception.AuthorizationException;
 import br.com.neja.services.exception.DataIntegrityException;
 import br.com.neja.services.exception.ObjectNotFoundException;
 
@@ -35,6 +38,13 @@ public class ClienteService {
 	private BCryptPasswordEncoder crypt;
 
 	public Cliente find(Integer id) {
+
+		UserSS user = UserService.authenticated();
+		
+		if (user == null || !user.hashRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id:" + id + " Tipo: " + Cliente.class.getSimpleName()));
@@ -84,10 +94,13 @@ public class ClienteService {
 	}
 
 	public Cliente fromDTO(ClienteNewDTO objDTO) {
+
 		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(),
 				TipoCliente.toEnum(objDTO.getTipo()), crypt.encode(objDTO.getSenha()));
+
 		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
 				new Cidade(objDTO.getCidade(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
+
 		cli.getEnderecos().add(end);
 		cli.getTelefones().addAll(objDTO.getTelefones());
 		return cli;
