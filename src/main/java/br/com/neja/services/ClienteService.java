@@ -67,6 +67,10 @@ public class ClienteService {
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
+	
+	public Cliente updateForgotEmail(Cliente obj) {
+		return repo.save(obj);
+	}
 
 	public void delete(Integer id) {
 		Cliente c = find(id);

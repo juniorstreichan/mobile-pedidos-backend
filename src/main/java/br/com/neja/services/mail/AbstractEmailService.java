@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 
+import br.com.neja.domain.Cliente;
 import br.com.neja.domain.Pedido;
 
 public abstract class AbstractEmailService implements EmailService {
@@ -68,5 +69,25 @@ public abstract class AbstractEmailService implements EmailService {
 	// return engine.process("email/confirmacao-pedido", context);
 	//
 	// }
+	
+	@Override
+	public void sendNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(cliente,newPass);
+		sendEmail(sm);
+		
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Cliente obj, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(obj.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Solicitação de nova Senha "+obj.getNome());
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("Nova Senha "+newPass);
+		System.out.println("\n\n\n ########## 1" + sm.getFrom() + " 2" + sm.getSubject() + " 3" + sm.getBcc() + " 4"
+				+ sm.getTo() + " ########## \n\n\n");
+
+		return sm;
+	}
 
 }
