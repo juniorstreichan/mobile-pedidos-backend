@@ -3,6 +3,8 @@ package br.com.neja.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -68,9 +70,7 @@ public class ClienteService {
 		return repo.save(newObj);
 	}
 	
-	public Cliente updateForgotEmail(Cliente obj) {
-		return repo.save(obj);
-	}
+
 
 	public void delete(Integer id) {
 		Cliente c = find(id);
@@ -120,6 +120,10 @@ public class ClienteService {
 			return null;
 
 		return repo.findByEmail(email);
+	}
+	
+	public Cliente updateForgotEmail(@Valid Cliente obj) {
+		return repo.save(obj);
 	}
 
 }
