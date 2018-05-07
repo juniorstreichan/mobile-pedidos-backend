@@ -1,5 +1,6 @@
 package br.com.neja.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.neja.domain.Cidade;
 import br.com.neja.domain.Cliente;
@@ -39,14 +41,17 @@ public class ClienteService {
 	@Autowired
 	private BCryptPasswordEncoder crypt;
 
+	@Autowired
+	private S3Service s3;
+
 	public Cliente find(Integer id) {
 
 		UserSS user = UserService.authenticated();
-		
+
 		if (user == null || !user.hashRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso Negado");
 		}
-		
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id:" + id + " Tipo: " + Cliente.class.getSimpleName()));
@@ -69,8 +74,6 @@ public class ClienteService {
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
-	
-
 
 	public void delete(Integer id) {
 		Cliente c = find(id);
@@ -121,9 +124,13 @@ public class ClienteService {
 
 		return repo.findByEmail(email);
 	}
-	
+
 	public Cliente updateForgotEmail(@Valid Cliente obj) {
 		return repo.save(obj);
+	}
+
+	public URI uploadProfileURI(MultipartFile multipartFile) {
+		return s3.uploadFile(multipartFile);
 	}
 
 }
