@@ -34,6 +34,9 @@ public class Cliente {
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
+	private String imageUrl;
+
+
 
 	@JsonIgnore
 	private String senha;
@@ -147,6 +150,15 @@ public class Cliente {
 		this.perfis.add(perfil.getCod());
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

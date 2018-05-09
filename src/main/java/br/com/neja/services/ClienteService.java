@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -125,12 +123,23 @@ public class ClienteService {
 		return repo.findByEmail(email);
 	}
 
-	public Cliente updateForgotEmail(@Valid Cliente obj) {
+	public Cliente updateForgotEmail( Cliente obj) {
 		return repo.save(obj);
 	}
 
 	public URI uploadProfileURI(MultipartFile multipartFile) {
-		return s3.uploadFile(multipartFile);
+
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
+		URI uri = s3.uploadFile(multipartFile);
+		Cliente cli = repo.findById(user.getId()).orElse(null);
+		cli.setImageUrl(uri.toString());
+		repo.save(cli);
+		return uri;
+
 	}
 
 }
