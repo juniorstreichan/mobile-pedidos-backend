@@ -34,7 +34,7 @@ public class Cliente {
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
-	private String imageUrl;
+
 
 
 
@@ -150,13 +150,7 @@ public class Cliente {
 		this.perfis.add(perfil.getCod());
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
 	
 	
 	@Override
