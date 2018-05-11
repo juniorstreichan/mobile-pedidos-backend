@@ -34,10 +34,10 @@ import br.com.neja.services.exception.ObjectNotFoundException;
 public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefixoImg;
-	
+
 	@Value("${img.profile.size}")
 	private Integer sizeImgProfile;
-	
+
 	@Autowired
 	private ClienteRepository repo;
 
@@ -130,8 +130,22 @@ public class ClienteService {
 	public Cliente findByEmail(String email) {
 		if (email == null)
 			return null;
-
 		return repo.findByEmail(email);
+	}
+	
+	
+	public Cliente findByEmailResource(String email) {
+		if (email == null)
+			return null;
+
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hashRole(Perfil.ADMIN) && !email.equals(user.getUsername()))
+			throw new AuthorizationException("Acesso negado");
+
+		Cliente ret = repo.findByEmail(email);
+		if (ret == null)
+			throw new ObjectNotFoundException("Objeto não encontrado : "+user.getId()+"  "+Cliente.class.getName());
+		return ret;
 	}
 
 	public Cliente updateForgotEmail(Cliente obj) {
