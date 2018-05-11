@@ -34,7 +34,10 @@ import br.com.neja.services.exception.ObjectNotFoundException;
 public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefixoImg;
-
+	
+	@Value("${img.profile.size}")
+	private Integer sizeImgProfile;
+	
 	@Autowired
 	private ClienteRepository repo;
 
@@ -143,9 +146,11 @@ public class ClienteService {
 		}
 
 		BufferedImage imgJpg = imageService.getJpgFromFile(multipartFile);
-		String fileName = prefixoImg+user.getId()+".jpg";
+		imgJpg = imageService.cropSquareImage(imgJpg);
+		imgJpg = imageService.resize(imgJpg, sizeImgProfile);
+		String fileName = prefixoImg + user.getId() + ".jpg";
 
-		return s3.uploadFile(imageService.getInputStream(imgJpg, "jpg"),fileName,"image");
+		return s3.uploadFile(imageService.getInputStream(imgJpg, "jpg"), fileName, "image");
 
 	}
 
