@@ -43,7 +43,6 @@ public class ClienteResource {
 	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {
 		Cliente obj = service.findByEmailResource(email);
 		return ResponseEntity.ok().body(obj);
-		
 	}
 	
 	
