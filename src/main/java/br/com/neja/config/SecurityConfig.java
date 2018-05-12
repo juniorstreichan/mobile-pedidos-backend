@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import br.com.neja.security.JWTAuthentictionFilter;
+import br.com.neja.security.JWTAuthenticationFilter;
 import br.com.neja.security.JWTAuthorizationFilter;
 import br.com.neja.security.JWTUtil;
 
@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	private void initFilters(HttpSecurity http) throws Exception {
-		http.addFilter(new JWTAuthentictionFilter(jwtUtil, authenticationManager()));
+		http.addFilter(new JWTAuthenticationFilter(jwtUtil, authenticationManager()));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 	}
 
@@ -69,8 +69,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration conf = new CorsConfiguration().applyPermitDefaultValues();
+		conf.setAllowedMethods(Arrays.asList("POST","PUT","DELETE","OPTIONS","GET"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/*", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**",conf );
 		return source;
 	}
 

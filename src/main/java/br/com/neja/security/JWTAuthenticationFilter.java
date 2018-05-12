@@ -18,14 +18,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.neja.dto.CredenciaisDTO;
 
-public class JWTAuthentictionFilter extends UsernamePasswordAuthenticationFilter {
+public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
  
 	private JWTUtil jwtUtil;
  
 	private AuthenticationManager authenticationManager;
 
-	public JWTAuthentictionFilter(JWTUtil jwtUtil, AuthenticationManager authenticationManager) {
+	public JWTAuthenticationFilter(JWTUtil jwtUtil, AuthenticationManager authenticationManager) {
 		this.jwtUtil = jwtUtil;
 		this.authenticationManager = authenticationManager;
 	}
