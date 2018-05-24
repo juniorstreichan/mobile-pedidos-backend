@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.neja.domain.Cidade;
@@ -70,10 +69,10 @@ public class ClienteService {
 		return repo.findAll();
 	}
 
-	@Transactional
+
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		repo.save(obj);
+		obj = repo.save(obj);
 		endRepo.saveAll(obj.getEnderecos());
 		return obj;
 	}
@@ -115,7 +114,7 @@ public class ClienteService {
 				TipoCliente.toEnum(objDTO.getTipo()), crypt.encode(objDTO.getSenha()));
 
 		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
-				new Cidade(objDTO.getCidade(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
+				new Cidade(objDTO.getCidadeId(), null, null), objDTO.getBairro(), objDTO.getCep(), cli);
 
 		cli.getEnderecos().add(end);
 		cli.getTelefones().addAll(objDTO.getTelefones());
@@ -132,8 +131,7 @@ public class ClienteService {
 			return null;
 		return repo.findByEmail(email);
 	}
-	
-	
+
 	public Cliente findByEmailResource(String email) {
 		if (email == null)
 			return null;
@@ -144,7 +142,8 @@ public class ClienteService {
 
 		Cliente ret = repo.findByEmail(email);
 		if (ret == null)
-			throw new ObjectNotFoundException("Objeto não encontrado : "+user.getId()+"  "+Cliente.class.getName());
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado : " + user.getId() + "  " + Cliente.class.getName());
 		return ret;
 	}
 
