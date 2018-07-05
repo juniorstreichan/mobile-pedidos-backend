@@ -5,6 +5,7 @@
  <b>Spring Data JPA </b> para a persistência de dados.<br>
 <b>Spring Security</b> com <b>JWT</b> para a parte de segurança da aplicação.<br>
 <b>Spring Boot</b> para facilitar a configuração.<br>
+<b>Amazon S3</b> para armazenar as fotos.<br>
 
 Dê um GET na API <br>
 http://mobile-pedidos.herokuapp.com/categorias<br>
